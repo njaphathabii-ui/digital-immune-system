@@ -70,78 +70,140 @@ The project also includes additional libraries for networking, web applications,
 
 ```text
 digital-immune-system/
-├── backup/
-│   ├── data/
-│   └── legacy/
 ├── dashboard/
-│   ├── dashboard.py
-│   └── test.py
-├── data/
-│   ├── system_metrics.csv
-│   ├── detection_results.csv
-│   ├── incident_log.csv
-│   └── security_events.csv
+│   └── dashboard.py
 ├── detection/
+│   ├── __init__.py
 │   ├── anomaly_detector.py
 │   ├── feature_engineering.py
 │   └── realtime_detector.py
-├── evidence/
+├── docs/
+│   ├── technical-documentation.md
+│   ├── testing-and-evaluation.md
+│   └── evidence/
+│       ├── 01_dashboard.png
+│       ├── 02_anomaly_detection.png
+│       ├── 03_incident_escalation.png
+│       └── 04_evidence_collection.png
 ├── forensics/
-├── models/
-│   ├── isolation_forest.pkl
-│   └── scaler.pkl
+│   ├── __init__.py
+│   ├── evidence.py
+│   └── incident_logger.py
 ├── monitoring/
-│   ├── system_monitor.py
+│   ├── __init__.py
+│   ├── log_monitor.py
 │   ├── network_monitor.py
-│   └── log_monitor.py
+│   └── system_monitor.py
 ├── response/
+│   ├── __init__.py
+│   ├── alerts.py
+│   ├── containment.py
+│   ├── recovery.py
 │   ├── response_engine.py
 │   └── risk_assessor.py
 ├── simulation/
+│   ├── __init__.py
+│   ├── abnormal_process.py
+│   ├── port_scan.py
+│   └── traffic_simulation.py
 ├── testing/
 │   └── escalation_test.py
-├── docs/
-├── requirements.txt
 ├── .gitignore
-└── README.md
+├── README.md
+└── requirements.txt
 ```
+**Note:** The `data/`, `models/`, and `evidence/` runtime folders are not committed. They are created or populated as you run the appropriate components. The screenshots are stored separately under `docs/evidence/`.
+
 
 Some directories contain supporting or experimental modules and may not be required by the main execution pipeline. Generated CSV files, model artifacts, evidence files, and backups can vary as the system runs.
 
 ## 6. Installation
 
+## 6. Installation
+
 ### Prerequisites
 
-- Python installed on the computer.
-- Visual Studio Code or another Python-compatible editor.
+- Python installed on your computer.
+- Git, if cloning the repository.
 - PowerShell on Windows.
-- The project source files and required trained model artifacts.
+- Internet access to install Python dependencies.
 
-### Step 1: Open the project directory
+### Step 1: Clone the repository
 
-Open PowerShell and navigate to the project folder:
+If you are setting up the project on a new computer:
 
 ```powershell
-cd "C:\Users\admin\OneDrive - Sol Plaatje University\Desktop\vscode\digital-immune-system"
+git clone https://github.com/njaphathabii-ui/digital-immune-system.git
+cd digital-immune-system
 ```
 
-### Step 2: Activate the virtual environment
+If you are already working in your existing project folder, skip this step.
+
+### Step 2: Create a virtual environment
+
+```powershell
+python -m venv venv
+```
+
+### Step 3: Activate the virtual environment
 
 ```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-### Step 3: Install dependencies
+If PowerShell blocks activation, consult the Python or PowerShell documentation for an appropriate execution-policy configuration.
+
+### Step 4: Install dependencies
 
 ```powershell
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-The virtual environment isolates the project's Python dependencies from other Python projects.
+The virtual environment isolates the project's dependencies from other Python projects.
 
 ## 7. Running the System
 
 Start each component in a separate PowerShell terminal. Run the commands from the project root.
+
+### Initial setup: Collect data and train the model
+
+The real-time detector requires two trained model files:
+
+- `models/isolation_forest.pkl`
+- `models/scaler.pkl`
+
+These files are generated locally and are not included in the GitHub repository.
+
+**Step 1: Collect monitoring data**
+
+Activate the virtual environment, then run:
+
+```powershell
+python monitoring\system_monitor.py
+```
+
+Allow the monitor to collect a representative sample of system activity. Stop it with `Ctrl + C` when you have enough data to train an initial model.
+
+The collected data should be available at `data/system_metrics.csv`.
+
+**Step 2: Train the anomaly-detection model**
+
+Run:
+
+```powershell
+python detection\anomaly_detector.py
+```
+
+This script reads `data/system_metrics.csv`, prepares the numerical features, trains the Isolation Forest model, and saves the model and scaler under `models/`. It also writes batch detection results to `data/detection_results.csv`.
+
+If the monitoring CSV does not exist or lacks the required features, resolve that issue before training.
+
+**Step 3: Start the application components**
+
+Once model training has completed, start the monitoring, real-time detection, response engine, and dashboard using the terminal commands below.
+
+> Training on locally collected data creates an initial baseline; it does not establish detection accuracy against confirmed cyberattacks. For research evaluation, use an appropriate test dataset and document how it was labelled and evaluated.
 
 ### Terminal 1: System monitoring
 
