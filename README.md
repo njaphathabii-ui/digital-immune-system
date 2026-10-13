@@ -119,8 +119,6 @@ Some directories contain supporting or experimental modules and may not be requi
 
 ## 6. Installation
 
-## 6. Installation
-
 ### Prerequisites
 
 - Python installed on your computer.
