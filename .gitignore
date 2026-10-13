@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Generated data
+data/*.csv
+
+# Machine learning models
+models/*.pkl
+models/*.joblib
+
+# Generated evidence
+evidence/*.json
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Backup files
+backup/
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Test and coverage caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
